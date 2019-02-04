@@ -3,11 +3,11 @@
 import os
 import json
 
-def dict_incr(d,e):
+def dict_incr(d,e,i=1):
 	if e in d:
-		d[e] += 1
+		d[e] += i
 	else:
-		d[e] = 1
+		d[e] = i
 
 def remap(d):
 	remap_rules = [ ('\n',None),
@@ -49,9 +49,7 @@ def remap(d):
 
 	# these two loops cannot be combined, because of the ae-rule
 	for (o,n) in remap_rules:
-		if n not in d:
-			d[n] = 0
-		d[n] += d[o]
+		dict_incr(d,n,d[o])
 
 	for (o,n) in remap_rules:
 		if o in d:
