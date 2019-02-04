@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import os
 
 class HtmlReadError(Exception):
@@ -27,8 +29,8 @@ def clean_tags(f):
 
 
 def main():
-	for i in os.listdir('HTML Files'):
-		s = clean_tags('HTML Files/' + i)
+	for i in os.listdir("HTML Files/"):
+		s = clean_tags("HTML Files/" + i)
 		f = open("Text Files/" + i[:-5] + ".txt",'w')
 		f.write(s)
 		f.close()
