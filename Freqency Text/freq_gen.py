@@ -66,8 +66,8 @@ def main():
 		for c in s:
 			dict_incr(freq,c)
 	remap(freq)
-	print("Removed (",freq[None],") diffrent characters")
-	js = json.dumps(freq, indent=4)
+	print("Removed (",freq.pop(None),") diffrent characters")
+	js = json.dumps(freq, indent=4,sort_keys=True)
 	print(js)
 	print("length:",len(freq))
 	open("freq.json",'w').write(js)

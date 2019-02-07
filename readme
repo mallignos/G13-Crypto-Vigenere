@@ -1,0 +1,30 @@
+Encryptor/Decryptor/Breaker of Vigenere cipher
+
+usage:
+	python3 main.py [mode] (files)
+
+Always saves the output in the out/ folder.
+
+[mode]:
+	encrypt (path/to/key) (path/to/plain)
+		Encrypts a specific file
+		Saves the file in the in the out/ folder, with the same name as the plain except it's extension is now ".crypto"
+
+	decrypt (path/to/key) (path/to/crypto)
+		Decrypts a file 
+		Saves the file in the out/ folder, with the same name as the crypto except it's extension is now ".plain"
+
+	break (path/to/crypto)
+		Tries to break the cipher
+		Saves the file in the out/ folder, with the same name as the crypto except it now has ".break" as extension.
+		The file will have 2 lines. On the first line, it puts whatever it thinks that the key is. On the second line, it puts the decrypted cyphertext.
+
+Examples:
+	python3 main.py encrypt in/vig_group13.key in/vig_group13.plain
+		encrypts the contents of file "in/vig_group13.plain" and saves the result in "./out/vig_group13.crypto" 
+
+	python3 main.py decrypt in/vig_group13.key in/vig_group13.crypto
+		decrypts the contents of the file "in/vig_group13.crypto" and saves the result in "./out/vig_group13.plain"
+
+	python3 main.py break in/vig_group13.crypto
+		Tries to break the contents of file "in/vig_group13.crypto" and saves the result in "./out/vig_group13.break"

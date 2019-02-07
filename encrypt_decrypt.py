@@ -1,55 +1,73 @@
 import encode_decode
 
-# Decrypts a single character that has been turned into an int c, key int k and
-# m amount of characters
-def encryptInt(c,k,m):
-	return (c + k) % m
+# Encrypts a single character that has been turned into an int c, key int k
+# int c the character to encrypt
+# int k the character act as key
+# return int the encrypted Character
+def encryptInt(c,k):
+	return (c + k) % encode_decode.MAX_INT
 
-# Encrypts a string s with key k and m amount of characters.
-def encryptString(s,k,m):
+# Encrypts a single char c, with key char k
+# char c the plain char
+# char k the key char
+# return char the crypto char
+def encryptChar(c,k):
+	return encode_decode.decodeInt(encryptInt(encode_decode.encodeChar(c),encode_decode.encodeChar(k)))
+
+# Encrypts a string s with key k
+# string s the plaintext to encrypt
+# string k the key 
+# returns string the cryptotext
+def encryptString(s,k):
 	outString = ""
 	for i in range(len(s)):
-		p_int = encode_decode.fromCharToInt(s[i         ])
-		k_int = encode_decode.fromCharToInt(k[i % len(k)])
-		c_int = encryptInt(p_int,k_int,m)
-
-		outString += fromIntToChar(c_int)
+		outString += encryptChar(s[i],k[i % len(k)])
 	
 	return outString
 
-# Decrypts a single character that has been turned into an int c, key int k and
-# m amount of characters
-def decryptInt(c,k,m):
-	return encryptInt(c,(-k),m) 
+# Decrypts a single character that has been turned into an int c, key int k
+# int c the character to dectypt
+# int k the character act as key
+# return int the decrypted character
+def decryptInt(c,k):
+	return encryptInt(c,(-k)) 
 
-# Decrypts a string s with key k and m amount of characters.
-def decryptString(s,k,m):
+# Decrypts a single char c, with key char k
+# char c the crypto char
+# char k the key char
+# return char the plain char
+def decryptChar(c,k):
+	return encode_decode.decodeInt(decryptInt(encode_decode.encodeChar(c),encode_decode.encodeChar(k)))
+
+# Decrypts a string s with key k
+# string s the cryptotext to decrypt
+# string k the key 
+# returns string the plaintext
+def decryptString(s,k):
 	outString = ""
 	for i in range(len(s)):
-		c_int = encode_decode.fromCharToInt(s[i         ])
-		k_int = encode_decode.fromCharToInt(k[i % len(k)]) 
-		p_int = decryptInt(c_int,k_int,m)
-
-		outString += fromIntToChar(p_int)
+		outString += decryptChar(s[i],k[i % len(k)])
 	
 	return outString
 
-# Encrypts a string, then saves it. Also decrypts the same string back
-# to see that the code was correctly implemented.
-def main():
+# Function that tests if the encryption is working.
+# Just for testing purposes.
+def _main():
 	plainString = open("in/vig_group13.plain","r").read().lower()
 	keyString   = open("in/vig_group13.key"  ,"r").read().lower()
 
-	codeString  = encryptString(plainString,keyString,32)
+	codeString  = encryptString(plainString,keyString)
 	
 	outFile     = open("out/vig_group13.crypto","w")
 	outFile.write(codeString)
 
-	decodedString = decryptString(codeString,keyString,32)
+	print(codeString)
+
+	decodedString = decryptString(codeString,keyString)
 	
 	print(decodedString)
 
 # So that Python starts to run the main.
 if __name__ == '__main__':
-    main()
+    _main()
 

@@ -8,7 +8,7 @@ from operator import itemgetter
 # int mini the minimum string length tested
 # int maxi the maximum string length tested
 # returns int the most likely keylength
-def keylength_guess_most_likely(s,mini=2,maxi=16):
+def keylength_guess_most_likely(s,mini=1,maxi=16):
 	res = []
 	for i in range(mini,maxi+1):
 		res += [(i,keylength_guess_friedman(s,i))]
@@ -64,7 +64,7 @@ def gen_freq(p,chars):
 
 
 # Tests the current functions
-def main():
+def _main():
 	file = open("in/vig_group4.crypto").read()
 
 	for m in range(2,17):
@@ -75,4 +75,4 @@ def main():
 
 # Runs main() if not imported.
 if __name__ == '__main__':
-	main()
+	_main()
