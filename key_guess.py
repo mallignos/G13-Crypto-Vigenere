@@ -91,8 +91,8 @@ def slow(s,sv_freq):
 # int m the guessed length of the key
 # dict(char,int) exp_freq a dict that acts as a frequency table for the guessed luangage of the cipher.
 # return string the guessed key
-def guess(s,m,exp_freq):
-	parts = mod_split(s,m)
+def guess(sx,m,exp_freq):
+	parts = keylength_guess.mod_split(sx,m)
 	
 	key = ""
 	for i in range(m):
@@ -114,8 +114,37 @@ def _main():
 	print(key) 
 	print(encrypt_decrypt.decryptString(file,key))
 
+
+# Sime more tests
+def _testMultiple():
+	str1 = open('Ciphers/text1.crypto','r').read()
+	str2 = open('Ciphers/text2.crypto','r').read()
+	str3 = open('Ciphers/text3.crypto','r').read()
+	str4 = open('Ciphers/text4.crypto','r').read()
+	str5 = open('Ciphers/text5.crypto','r').read()
+
+	m = 205
+
+	p1 = mod_split(str1,m)
+	p2 = mod_split(str2,m)
+	p3 = mod_split(str3,m)
+	p4 = mod_split(str4,m)
+	p5 = mod_split(str5,m)
+
+	final = [[]]*m
+	for q in range(m):
+		final[q] = p1[q] + p2[q] + p3[q] + p4[q] + p5[q]
+
+	final2 = keylength_guess.mod_split([str1,str2,str3,str4,str5],m)
+	print(final)
+	print(final2)
+
+	print(guess(final2,m,json.loads(open("Freqency Text/freq.json",'r').read())))
+
+
 		
 
 # runs the tests if not imported.
 if __name__ == '__main__':
-	_main()
+	#_main()
+	_testMultiple()

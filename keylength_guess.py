@@ -4,26 +4,29 @@ import encode_decode
 from operator import itemgetter
 
 # Analyse a string and return the most likely keylength
-# String s the string analysed
+# [String] s list of strings to analysed
 # int mini the minimum string length tested
 # int maxi the maximum string length tested
 # returns int the most likely keylength
-def keylength_guess_most_likely(s,mini=1,maxi=16):
+def keylength_guess_most_likely(sx,mini=2,maxi=16):
 	res = []
 	for i in range(mini,maxi+1):
-		res += [(i,keylength_guess_friedman(s,i))]
+		partitions = mod_split(sx,i)
+		res += [(i,keylength_guess_friedman(partitions,i))]
+		
+		#if res[-1][1] > 0.05:
+		#	print(res[-1])
 
 	return max(res,key=itemgetter(1))[0]
 
 
+
 # The friedman value of the string with keylength m
-# String s the string analysed
+# [String] partitions the string analysed, already split in partionitons
 # int m the tested keylength
 # returns float the value
-def keylength_guess_friedman(s,m):
-	partitions = mod_split(s,m)
+def keylength_guess_friedman(partitions,m):
 
-	#print(partitions)
 	sum_ = 0
 	for p in partitions:
 		sum_ += IC(p)
@@ -31,13 +34,14 @@ def keylength_guess_friedman(s,m):
 	return (sum_/m)
 
 # The string into diffrent substring, depending on their modulo
-# string s the string to be split
+# [string] s  a list of the strings to be split
 # int m the amount of splits
 # returns [string] the partitioned strings 
-def mod_split(s,m):
+def mod_split(sx,m):
 	out = [""]*m
-	for i in range(0,len(s)):
-		out[i%m] += s[i]
+	for q in sx:
+		for i in range(0,len(q)):
+			out[i%m] += q[i]
 	return out
 
 # Calculates the index of coincidence for a string p

@@ -32,7 +32,7 @@ def ignoreLast(s,c):
 # char c the char to compare
 # return string The string without the characters
 def ignoreInit(s,c):
-	i = findlast(s,c)
+	i = findLast(s,c)
 	return s[i+1:]
 
 # Makes a file path to output into, so that the file can inherit the name.
@@ -53,7 +53,7 @@ def encrypt():
 	plain = open(inputPlainPath,'r').read()
 	key = open(inputKeyPath,'r').read()
 
-	crypto = encrypt_decrypt.encryptString(plain,key,32)
+	crypto = encrypt_decrypt.encryptString(plain,key)
 
 	open(outputPath,'w').write(crypto)
 
@@ -68,7 +68,7 @@ def decrypt():
 	crypto = open(inputCryptoPath,'r').read()
 	key = open(inputKeyPath,'r').read()
 
-	plain = encrypt_decrypt.decryptString(crypto,key,32)
+	plain = encrypt_decrypt.decryptString(crypto,key)
 
 	open(outputPath,'w').write(plain)
 
@@ -76,24 +76,57 @@ def decrypt():
 # returns none
 # Side effects: creates/overwrites a file in out/, with the crypto from input
 def break_():
-	inputCryptoPath = sys.argv[2]
-	outputPath = makeOutputPath(inputCryptoPath,".break")
+	crypto_argc = 2
+	kmax = 16
+	if sys.argv[2][:2] == '-k':
+		kmax = int(sys.argv[2][2:]) 
+		crypto_argc = 3
+	
+	inputCryptoPaths = [sys.argv[crypto_argc]]
+	
+	break_aux(inputCryptoPaths,kmax)
 
 
-	crypto = open(inputCryptoPath,'r').read()
+# Handles break-multiple command
+# returns none
+# Side effects: creates/overwrites a file in out/, with the crypto from input
+def break_multiple():
+	crypto_argc = 2
+	kmax = 16
+	if sys.argv[2][:2] == '-k':
+		kmax = int(sys.argv[2][2:]) 
+		crypto_argc = 3
+
+	inputCryptoPaths = sys.argv[crypto_argc:]
+	break_aux(inputCryptoPaths,kmax)
+
+# Handles break-multiple command
+# returns none
+# Side effects: creates/overwrites a file in out/, with the crypto from input
+def break_aux(inputCryptoPaths,kmax):
+	
+	cryptos = []
+	for path in inputCryptoPaths: 
+		cryptos += [open(path,'r').read()]
+
 	freq = json.loads(open("Freqency Text/freq.json",'r').read())
 
-	m = keylength_guess.keylength_guess_most_likely(crypto)
-	key = key_guess.guess(crypto,m,freq)
+	m = keylength_guess.keylength_guess_most_likely(cryptos,maxi=kmax)
+	print("Guessed length:",m)
+	key = key_guess.guess(cryptos,m,freq)
+	print("Guessed Key   :",key)
 
-	plain = encrypt_decrypt.decryptString(crypto,key,32)
+	for i in range(len(cryptos)):
+		outputPath = makeOutputPath(inputCryptoPaths[i],".break")
+		plain = encrypt_decrypt.decryptString(cryptos[i],key)
 
-	open(outputPath,'w').write(key + "\n" + plain)
+		open(outputPath,'w').write(key + "\n" + plain)
+
 
 # Handles if no command was given
 # returns none
 # Side effects: prints stuff in the terminal
-def help() {
+def help():
 	print("Usage: python3 main.py [mode] (...)")
 	print("\tRead the readme for more info.")
 	print("Availeble [mode]:")
@@ -101,7 +134,6 @@ def help() {
 	print("\tpython3 main.py decrypt (path/to/key) (path/to/crypto)")
 	print("\tpython3 main.py break (path/to/crypto)")
 
-}
 
 # Main
 # desides what function above to run.
@@ -111,7 +143,9 @@ def main():
 	elif sys.argv[1] == 'decrypt':
 		decrypt()
 	elif sys.argv[1] == 'break':
-		break_()
+		break_multiple()
+	#elif sys.argv[1] == 'break-multiple':
+	#	break_multiple()
 	else:
 		help()
 
