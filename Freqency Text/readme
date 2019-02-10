@@ -1,0 +1,6 @@
+This folder contains 3 things and a lot of temporary files.
+	* The book "Röda rummet"
+	* python files to generate a frequency table from the book, saved in freq.json
+	* freq.json The Frequency table used in the big cipher breaking program.
+
+Nothing in this file needs to be runned, and should be left untouched. If you want to genererate another freq.json, run "python3 html-txt.py" and "python3 freq_gen.py", in that order. 
